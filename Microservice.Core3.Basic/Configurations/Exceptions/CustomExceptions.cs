@@ -1,23 +1,23 @@
-﻿using System;
-using Microservice.Core3.Basic.Literals;
+﻿using Microservice.Core3.Basic.Literals;
 using Microsoft.AspNetCore.Http;
+using System;
 
 #pragma warning disable CA1032 // Implement standard exception constructors
 namespace Microservice.Core3.Basic.Configurations.Exceptions
 {
     public static class CustomExceptions
     {
-        public static void Throw(int statusCode) =>
+        public static void Throw(int statusCode, string message = null) =>
             throw (statusCode switch
             {
-                StatusCodes.Status400BadRequest => new BadRequestCustomException(),
-                StatusCodes.Status401Unauthorized => new UnauthorizedCustomException(),
-                StatusCodes.Status403Forbidden => new ForbiddenCustomException(),
-                StatusCodes.Status404NotFound => new NotFoundCustomException(),
-                StatusCodes.Status409Conflict => new ConflictCustomException(),
-                StatusCodes.Status501NotImplemented => new NotImplementedCustomException(),
-                StatusCodes.Status503ServiceUnavailable => new ServiceUnavailableCustomException(),
-                _ => new InternalServerErrorCustomException()
+                StatusCodes.Status400BadRequest => new BadRequestCustomException(message),
+                StatusCodes.Status401Unauthorized => new UnauthorizedCustomException(message),
+                StatusCodes.Status403Forbidden => new ForbiddenCustomException(message),
+                StatusCodes.Status404NotFound => new NotFoundCustomException(message),
+                StatusCodes.Status409Conflict => new ConflictCustomException(message),
+                StatusCodes.Status501NotImplemented => new NotImplementedCustomException(message),
+                StatusCodes.Status503ServiceUnavailable => new ServiceUnavailableCustomException(message),
+                _ => new InternalServerErrorCustomException(message)
             });
     }
 

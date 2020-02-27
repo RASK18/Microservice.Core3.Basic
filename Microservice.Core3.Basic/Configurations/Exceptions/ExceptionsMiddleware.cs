@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microservice.Core3.Basic.Literals;
-using Microservice.Core3.Basic.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,9 +13,9 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
     {
         private readonly IMapper _mapper;
         private readonly RequestDelegate _next;
-        private readonly ILogger<ValueService> _logger;
+        private readonly ILogger<ExceptionsMiddleware> _logger;
 
-        public ExceptionsMiddleware(RequestDelegate next, IMapper mapper, ILogger<ValueService> logger)
+        public ExceptionsMiddleware(RequestDelegate next, IMapper mapper, ILogger<ExceptionsMiddleware> logger)
         {
             _next = next;
             _mapper = mapper;
