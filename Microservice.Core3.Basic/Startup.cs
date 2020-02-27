@@ -1,51 +1,49 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Microservice.Core3.Basic.Configurations.Exceptions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Reflection;
 
 namespace Microservice.Core3.Basic
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public static IConfiguration Configuration { get; set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            IMvcBuilder builder = services.AddControllers();
+
+            InjectDependencies(services);
+            ConfigureSwagger(services);
+            ConfigureJsonSettings(builder);
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            // Customize global external 400 bad request produced before the request enters into the application
+            services.Configure<ApiBehaviorOptions>(a => a.InvalidModelStateResponseFactory = b =>
+                throw new BadRequestCustomException(b.ModelState.Values.ToList().FirstOrDefault()?.Errors.FirstOrDefault()?.ErrorMessage));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        // ReSharper disable once UnusedMember.Global
+        public static void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            // Middleware for internal errors produced after the request is already in the application
+            app.UseMiddleware<ExceptionsMiddleware>();
+
+            ConfigureSwagger(app);
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
