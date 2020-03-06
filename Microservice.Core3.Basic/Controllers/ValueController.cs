@@ -5,6 +5,7 @@ using Microservice.Core3.Basic.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 #pragma warning disable CA1822 // Mark members as static
 namespace Microservice.Core3.Basic.Controllers
@@ -21,13 +22,13 @@ namespace Microservice.Core3.Basic.Controllers
         public ValueController(ValueService valueService) => _valueService = valueService;
 
         [HttpGet("RandomExceptionVoid")]
-        public void RandomExceptionVoid()
+        public Task<IActionResult> RandomExceptionVoid()
         {
             throw new Exception();
         }
 
         [HttpGet("RandomExceptionMessage")]
-        public void RandomExceptionMessage()
+        public Task<IActionResult> RandomExceptionMessage()
         {
             throw new Exception("This is a unhandle exception jeje");
         }
