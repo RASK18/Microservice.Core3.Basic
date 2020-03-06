@@ -1,37 +1,45 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using Microservice.Core3.Basic.Literals;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace Microservice.Core3.Basic
 {
     public partial class Startup
     {
+        private const string TitleV1 = "v1";
         private static readonly string ApiName = Assembly.GetExecutingAssembly().GetName().Name;
 
         private static void ConfigureSwagger(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(o =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = ApiName, Version = "v1" });
+                o.SwaggerDoc(TitleV1, new OpenApiInfo { Title = ApiName, Version = "v1" });
 
                 string filePath = Path.Combine(AppContext.BaseDirectory, ApiName + ".xml");
-                c.IncludeXmlComments(filePath);
+                o.IncludeXmlComments(filePath);
             });
         }
 
         private static void ConfigureSwagger(IApplicationBuilder app)
         {
-            app.UseSwagger();
+            // This is to make it work with my kubernetes structure, you can use: app.UseSwagger();
+            string processName = Process.GetCurrentProcess().ProcessName;
+            bool isLocal = processName == "iisexpress" || processName == ApiName;
+            string basePath = isLocal ? "" : "/FoLdEr_SeRvEr_NaMe"; // ToDo: Remember change this
 
-            app.UseSwaggerUI(c =>
+            app.UseSwagger(o =>
+                o.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                    swaggerDoc.Servers.Add(new OpenApiServer { Url = basePath })));
+
+            app.UseSwaggerUI(o =>
             {
-                c.DocumentTitle = ApiName;
-                c.SwaggerEndpoint(Config.SwaggerEndpoint, " V1");
-                c.DisplayOperationId();
+                o.DisplayOperationId();
+                o.DocumentTitle = ApiName;
+                o.SwaggerEndpoint($"{basePath}/swagger/{TitleV1}/swagger.json", " V1");
             });
         }
 

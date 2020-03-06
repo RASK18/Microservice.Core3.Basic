@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Microservice.Core3.Basic.Utils
 {
     /// <summary>
-    /// Funciones para escribir los tiempos en el log de la consola, para depurar
+    /// Functions to write the times in the console log, to debug
     /// </summary>
     public static class TimeLog
     {
@@ -16,7 +16,7 @@ namespace Microservice.Core3.Basic.Utils
         private static List<Time> _times = new List<Time>();
 
         /// <summary>
-        /// Agrega un registro al log y lo inicia
+        /// Add a record to the log and start it
         /// </summary>
         /// <param name="name"></param>
         /// <param name="level"></param>
@@ -33,7 +33,7 @@ namespace Microservice.Core3.Basic.Utils
         }
 
         /// <summary>
-        /// Detiene el tiempo de un elemento del log
+        /// Stop the time of an element of the log
         /// </summary>
         /// <param name="guid"></param>
         public static void Stop(Guid guid)
@@ -43,7 +43,7 @@ namespace Microservice.Core3.Basic.Utils
         }
 
         /// <summary>
-        /// Agrega al log el tiempo de una llamada sin dejar de hacerla asíncrona
+        /// Add the time of a call to the log while still making it asynchronous
         /// </summary>
         /// <param name="task"></param>
         /// <param name="name"></param>
@@ -57,7 +57,7 @@ namespace Microservice.Core3.Basic.Utils
         }
 
         /// <summary>
-        /// Agrega al log el tiempo de una llamada sin dejar de hacerla asíncrona
+        /// Add the time of a call to the log while still making it asynchronous
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="task"></param>
@@ -74,7 +74,7 @@ namespace Microservice.Core3.Basic.Utils
         }
 
         /// <summary>
-        /// Escribe en la consola todos los tiempos
+        /// Write on the console all the times
         /// </summary>
         public static void ToConsole()
         {

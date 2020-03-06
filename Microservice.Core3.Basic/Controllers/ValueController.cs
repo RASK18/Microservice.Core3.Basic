@@ -9,6 +9,7 @@ using System;
 #pragma warning disable CA1822 // Mark members as static
 namespace Microservice.Core3.Basic.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route(Config.ApiController)]
     [Produces(Config.ApplicationJson)]

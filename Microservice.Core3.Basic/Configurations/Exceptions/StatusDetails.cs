@@ -1,4 +1,4 @@
-﻿namespace Microservice.Core3.Basic.Literals
+﻿namespace Microservice.Core3.Basic.Configurations.Exceptions
 {
     public static class StatusDetails
     {

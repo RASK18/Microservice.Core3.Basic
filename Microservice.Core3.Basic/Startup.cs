@@ -1,49 +1,58 @@
 using AutoMapper;
 using Microservice.Core3.Basic.Configurations.Exceptions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Microservice.Core3.Basic
 {
     public partial class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public static IConfiguration Configuration { get; set; }
 
         public static void ConfigureServices(IServiceCollection services)
         {
-            IMvcBuilder builder = services.AddControllers();
-
-            InjectDependencies(services);
+            ConfigureCors(services);
             ConfigureSwagger(services);
-            ConfigureJsonSettings(builder);
+            InjectDependencies(services);
+            //ConfigureAuthentication(services);
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            // Customize global external 400 bad request produced before the request enters into the application
-            services.Configure<ApiBehaviorOptions>(a => a.InvalidModelStateResponseFactory = b =>
-                throw new BadRequestCustomException(b.ModelState.Values.ToList().FirstOrDefault()?.Errors.FirstOrDefault()?.ErrorMessage));
+            IMvcBuilder builder = services.AddControllers();
+            ConfigureJsonSettings(builder);
+
+            // External Custom 400 Bad Request with error message
+            builder.ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = c =>
+                throw new BadRequestCustomException(c.ModelState.Values.ToList().FirstOrDefault()?.Errors.FirstOrDefault()?.ErrorMessage));
         }
 
         // ReSharper disable once UnusedMember.Global
         public static void Configure(IApplicationBuilder app)
         {
-            // Middleware for internal errors produced after the request is already in the application
+            // Internal Custom Errors
             app.UseMiddleware<ExceptionsMiddleware>();
 
-            ConfigureSwagger(app);
+            // External Custom Errors
+            app.UseStatusCodePages(c =>
+            {
+                int status = c.HttpContext.Response.StatusCode;
+                CustomExceptions.Throw(status);
+                return Task.CompletedTask;
+            });
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+            ConfigureSwagger(app);
         }
     }
 }
