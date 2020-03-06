@@ -20,7 +20,6 @@ namespace Microservice.Core3.Basic
             ConfigureCors(services);
             ConfigureSwagger(services);
             InjectDependencies(services);
-            //ConfigureAuthentication(services);
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             IMvcBuilder builder = services.AddControllers();
@@ -48,8 +47,6 @@ namespace Microservice.Core3.Basic
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseRouting();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
             ConfigureSwagger(app);

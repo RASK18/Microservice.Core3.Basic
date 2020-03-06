@@ -9,7 +9,6 @@ using System;
 #pragma warning disable CA1822 // Mark members as static
 namespace Microservice.Core3.Basic.Controllers
 {
-    //[Authorize]
     [ApiController]
     [Route(Config.ApiController)]
     [Produces(Config.ApplicationJson)]
@@ -22,14 +21,12 @@ namespace Microservice.Core3.Basic.Controllers
         public ValueController(ValueService valueService) => _valueService = valueService;
 
         [HttpGet("RandomExceptionVoid")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public void RandomExceptionVoid()
         {
             throw new Exception();
         }
 
         [HttpGet("RandomExceptionMessage")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public void RandomExceptionMessage()
         {
             throw new Exception("This is a unhandle exception jeje");
