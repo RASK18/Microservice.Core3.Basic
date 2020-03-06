@@ -17,10 +17,9 @@ namespace Microservice.Core3.Basic
         {
             services.AddSwaggerGen(o =>
             {
-                o.SwaggerDoc(TitleV1, new OpenApiInfo { Title = ApiName, Version = "v1" });
-
                 string filePath = Path.Combine(AppContext.BaseDirectory, ApiName + ".xml");
                 o.IncludeXmlComments(filePath);
+                o.SwaggerDoc(TitleV1, new OpenApiInfo { Title = ApiName, Version = "v1" });
             });
         }
 
