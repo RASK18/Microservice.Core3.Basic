@@ -1,11 +1,11 @@
-﻿using Microservice.Core3.Basic.Configurations.Exceptions;
-using Microservice.Core3.Basic.Data.Dto;
+﻿using Microservice.Core3.Basic.Data.Dto;
 using Microservice.Core3.Basic.Literals;
 using Microservice.Core3.Basic.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microservice.Core3.Basic.Configurations.Exceptions;
 
 #pragma warning disable CA1822 // Mark members as static
 namespace Microservice.Core3.Basic.Controllers
@@ -13,8 +13,6 @@ namespace Microservice.Core3.Basic.Controllers
     [ApiController]
     [Route(Config.ApiController)]
     [Produces(Config.ApplicationJson)]
-    [ProducesResponseType(typeof(ExceptionsResponse), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(typeof(ExceptionsResponse), StatusCodes.Status501NotImplemented)]
     public class ValueController : ControllerBase
     {
         private readonly ValueService _valueService;
@@ -34,14 +32,14 @@ namespace Microservice.Core3.Basic.Controllers
         }
 
         [HttpGet("CustomExceptionVoid")]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ExceptionDto), StatusCodes.Status409Conflict)]
         public void CustomExceptionVoid()
         {
             _valueService.CustomExceptionVoid();
         }
 
         [HttpGet("CustomExceptionMessage")]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ExceptionDto), StatusCodes.Status409Conflict)]
         public void CustomExceptionMessage()
         {
             _valueService.CustomExceptionMessage();
