@@ -24,12 +24,12 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
         {
             try
             {
+                context.Request.EnableBuffering();
                 await _next.Invoke(context);
             }
             catch (Exception ex)
             {
                 await HandleException(context, ex);
-                throw;
             }
         }
 
