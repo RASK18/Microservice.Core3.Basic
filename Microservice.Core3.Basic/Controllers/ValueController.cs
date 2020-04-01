@@ -7,7 +7,6 @@ using System;
 using System.Threading.Tasks;
 using Microservice.Core3.Basic.Configurations.Exceptions;
 
-#pragma warning disable CA1822 // Mark members as static
 namespace Microservice.Core3.Basic.Controllers
 {
     [ApiController]
@@ -28,18 +27,18 @@ namespace Microservice.Core3.Basic.Controllers
         [HttpGet("RandomExceptionMessage")]
         public Task<IActionResult> RandomExceptionMessage()
         {
-            throw new Exception("This is a unhandle exception jeje");
+            throw new Exception("This is a unhandled exception jeje");
         }
 
         [HttpGet("CustomExceptionVoid")]
-        [ProducesResponseType(typeof(ExceptionDto), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CustomExceptionDto), StatusCodes.Status409Conflict)]
         public void CustomExceptionVoid()
         {
             _valueService.CustomExceptionVoid();
         }
 
         [HttpGet("CustomExceptionMessage")]
-        [ProducesResponseType(typeof(ExceptionDto), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CustomExceptionDto), StatusCodes.Status409Conflict)]
         public void CustomExceptionMessage()
         {
             _valueService.CustomExceptionMessage();

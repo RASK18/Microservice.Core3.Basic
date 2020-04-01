@@ -72,15 +72,15 @@ namespace Microservice.Core3.Basic
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            context.SchemaGenerator.GenerateSchema(typeof(ExceptionDto), context.SchemaRepository);
+            context.SchemaGenerator.GenerateSchema(typeof(CustomExceptionDto), context.SchemaRepository);
 
-            OpenApiReference reference = new OpenApiReference { Id = typeof(ExceptionDto).Name, Type = ReferenceType.Schema };
+            OpenApiReference reference = new OpenApiReference { Id = typeof(CustomExceptionDto).Name, Type = ReferenceType.Schema };
             OpenApiSchema schema = new OpenApiSchema { Reference = reference };
             OpenApiMediaType mediaType = new OpenApiMediaType { Schema = schema };
             Dictionary<string, OpenApiMediaType> content = new Dictionary<string, OpenApiMediaType> { { "application/json", mediaType } };
 
-            operation.Responses.Add("400", new OpenApiResponse { Description = StatusDetails.Title400, Content = content });
-            operation.Responses.Add("500", new OpenApiResponse { Description = StatusDetails.Title500, Content = content });
+            operation.Responses.Add("400", new OpenApiResponse { Description = "Bad Request", Content = content });
+            operation.Responses.Add("500", new OpenApiResponse { Description = "Internal Server Error", Content = content });
         }
     }
 
