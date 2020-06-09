@@ -19,6 +19,7 @@ namespace Microservice.Core3.Basic
             ConfigureCors(services);
             ConfigureSwagger(services);
             InjectDependencies(services);
+            AddHttpClients(services);
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             IMvcBuilder builder = services.AddControllers();
@@ -26,7 +27,7 @@ namespace Microservice.Core3.Basic
 
             // External Custom Bad request with error message
             builder.ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = c =>
-                throw new CustomException(Type.BadRequest, c.ModelState.Values.ToList().FirstOrDefault()?.Errors.FirstOrDefault()?.ErrorMessage));
+                throw new CustomException(Types.BadRequest, c.ModelState.Values.ToList().FirstOrDefault()?.Errors.FirstOrDefault()?.ErrorMessage));
         }
 
         public static void Configure(IApplicationBuilder app)

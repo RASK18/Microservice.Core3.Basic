@@ -1,6 +1,7 @@
 using Microservice.Core3.Basic.Literals;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Polly.Timeout;
 using System;
 using System.Threading.Tasks;
 
@@ -29,9 +30,14 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
             {
                 await HandleException(context, customEx);
             }
+            catch (TimeoutRejectedException timeout)
+            {
+                CustomException customEx = new CustomException(Types.TimeOut, timeout.Message) { Source = timeout.Source };
+                await HandleException(context, customEx);
+            }
             catch (Exception ex)
             {
-                CustomException customEx = new CustomException(Type.InternalServerError, ex.Message) { Source = ex.Source };
+                CustomException customEx = new CustomException(Types.InternalServerError, ex.Message) { Source = ex.Source };
                 await HandleException(context, customEx);
             }
         }

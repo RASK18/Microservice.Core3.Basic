@@ -18,16 +18,16 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
         public string Method { get; set; }
         public string Body { get; set; }
 
-        public CustomException(Type type, string message = null) => Fill(type, message);
+        public CustomException(Types type, string message = null) => Fill(type, message);
 
         public CustomException(int statusCode, string message = null)
         {
-            bool valid = Enum.IsDefined(typeof(Type), statusCode);
-            Type type = valid ? (Type)statusCode : Type.InternalServerError;
+            bool valid = Enum.IsDefined(typeof(Types), statusCode);
+            Types type = valid ? (Types)statusCode : Types.InternalServerError;
             Fill(type, message);
         }
 
-        public override string ToString() => JsonConvert.SerializeObject(new { Title, Detail, Message, Source, Request, Method, Body });
+        public override string ToString() => JsonConvert.SerializeObject(new { Title, Detail, Message, Source, Method, Request, Body });
 
         public async Task AddRequest(HttpRequest request)
         {
@@ -43,7 +43,7 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
             Body = await reader.ReadToEndAsync();
         }
 
-        private void Fill(Type type, string message)
+        private void Fill(Types type, string message)
         {
             string details = StatusDetails.Get(type);
             IEnumerable<string> chars = type.ToString().Select(c => char.IsUpper(c) ? " " + c : c.ToString());
