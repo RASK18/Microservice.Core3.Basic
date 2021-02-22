@@ -51,7 +51,7 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
             await response.WriteAsync(dto.ToString());
 
             await customEx.AddRequest(context.Request);
-            _logger.LogError("\r\n" + customEx);
+            _logger.LogError(Environment.NewLine + customEx);
         }
     }
 }

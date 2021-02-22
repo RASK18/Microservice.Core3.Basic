@@ -10,6 +10,9 @@ namespace Microservice.Core3.Basic
 {
     public partial class Startup
     {
+        // This is to make it work with my kubernetes structure
+        private const string BasePath = "/FoLdEr_SeRvEr_NaMe"; // ToDo: Remember change this
+
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public static IConfiguration Configuration { get; set; }
@@ -32,6 +35,8 @@ namespace Microservice.Core3.Basic
 
         public static void Configure(IApplicationBuilder app)
         {
+            app.UsePathBase(BasePath);
+
             // Internal Custom Errors
             app.UseMiddleware<ExceptionsMiddleware>();
 

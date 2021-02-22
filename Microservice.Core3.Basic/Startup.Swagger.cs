@@ -5,7 +5,6 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -33,20 +32,15 @@ namespace Microservice.Core3.Basic
 
         private static void ConfigureSwagger(IApplicationBuilder app)
         {
-            // This is to make it work with my kubernetes structure, you can use: app.UseSwagger();
-            string processName = Process.GetCurrentProcess().ProcessName;
-            bool isLocal = processName == "iisexpress" || processName == ApiName;
-            string basePath = isLocal ? "" : "/FoLdEr_SeRvEr_NaMe"; // ToDo: Remember change this
-
             app.UseSwagger(o =>
                 o.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                    swaggerDoc.Servers.Add(new OpenApiServer { Url = basePath })));
+                    swaggerDoc.Servers.Add(new OpenApiServer { Url = BasePath })));
 
             app.UseSwaggerUI(o =>
             {
                 o.DisplayOperationId();
                 o.DocumentTitle = ApiName;
-                o.SwaggerEndpoint($"{basePath}/swagger/{TitleV1}/swagger.json", " V1");
+                o.SwaggerEndpoint($"{BasePath}/swagger/{TitleV1}/swagger.json", " V1");
             });
         }
 
