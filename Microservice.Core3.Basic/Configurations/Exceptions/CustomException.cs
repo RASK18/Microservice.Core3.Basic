@@ -14,7 +14,7 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
         public string Title { get; set; }
         public string Detail { get; set; }
         public new string Message { get; set; }
-        public DateTimeOffset Time { get; set; }
+        public DateTime Time { get; set; }
         public string Method { get; set; }
         public string Request { get; set; }
         public string Body { get; set; }
@@ -28,11 +28,12 @@ namespace Microservice.Core3.Basic.Configurations.Exceptions
             Fill(type, message);
         }
 
-        public override string ToString() => JsonConvert.SerializeObject(new { Title, Detail, Message, Source, Time, Method, Request, Body });
+        public override string ToString() => JsonConvert.SerializeObject(
+            new { Title, Detail, Message, Source, Time = Time.ToString("G"), Method, Request, Body });
 
         public async Task AddRequest(HttpRequest request)
         {
-            Time = DateTimeOffset.UtcNow;
+            Time = DateTime.UtcNow;
             Method = request.Method;
             Request = request.Path;
 
